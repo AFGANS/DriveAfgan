@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>!!! PERINGATAN KRITIS: KONTROL PERANGKAT HILANG !!!</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js for the fake alarm sound and laugh -->
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.7.58/build/Tone.min.js"></script>
+    <style>
+        /* Custom styles for a more terrifying and urgent theme */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #ff3b30;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 1rem;
+            overflow: hidden;
+        }
+        
+        /* A flickering and color-shifting effect to simulate a critical error */
+        body.glitch-effect {
+            animation: glitch-color 0.2s infinite alternate;
+        }
+
+        @keyframes glitch-color {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .flicker-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ff0000;
+            opacity: 0;
+            pointer-events: none;
+            animation: flicker 0.05s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0; }
+            100% { opacity: 0.3; }
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #121212;
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.7);
+            padding: 4rem;
+            border: 3px solid #ff3b30;
+            animation: shake 0.05s infinite;
+            position: relative;
+            z-index: 10;
+        }
+        
+        @keyframes shake {
+            0% { transform: translate(3px, 3px) rotate(1.5deg); }
+            10% { transform: translate(-3px, -4px) rotate(-2.5deg); }
+            20% { transform: translate(-5px, 0px) rotate(2.5deg); }
+            30% { transform: translate(5px, 4px) rotate(1.5deg); }
+            40% { transform: translate(3px, -3px) rotate(2.5deg); }
+            50% { transform: translate(-3px, 4px) rotate(-1.5deg); }
+            60% { transform: translate(-5px, 3px) rotate(2.5deg); }
+            70% { transform: translate(5px, 3px) rotate(-2.5deg); }
+            80% { transform: translate(-3px, -3px) rotate(1.5deg); }
+            90% { transform: translate(3px, 4px) rotate(-2.5deg); }
+            100% { transform: translate(3px, -4px) rotate(1.5deg); }
+        }
+
+        .alert-box {
+            background-color: #ff3b30;
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            font-size: 1.75rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            animation: pulse-red 1s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 59, 48, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+        }
+
+        .icon {
+            width: 64px;
+            height: 64px;
+        }
+        
+        /* Styles for the critical countdown timer */
+        .countdown {
+            font-size: 5rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            animation: text-pulse 1s infinite;
+        }
+        
+        @keyframes text-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        /* New styles for the fake critical system window */
+        .critical-window-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .critical-window-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .critical-window {
+            background-color: #1f2328;
+            border-radius: 8px;
+            box-shadow: 0 5px 30px rgba(255, 0, 0, 0.8);
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid #ff3b30;
+            animation: shake 0.1s infinite;
+            overflow: hidden;
+        }
+
+        .window-title-bar {
+            background-color: #b52a2a;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            border-bottom: 2px solid #ff3b30;
+        }
+
+        .window-title-bar-flash {
+            animation: flash-red 0.2s 3;
+        }
+
+        @keyframes flash-red {
+            0%, 100% { background-color: #b52a2a; }
+            50% { background-color: #ff0000; }
+        }
+
+        .window-close-button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .window-body {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Overlay to force user interaction on mobile */
+        #start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .start-button {
+            background-color: #ff3b30;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 1.5rem 3rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.5);
+            animation: pulse-red 2s infinite;
+        }
+
+        /* New overlay for the freeze effect */
+        .freeze-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1002;
+            display: none;
+            pointer-events: none; /* Make it unclickable */
+        }
+
+        /* The custom message box for the final prank message */
+        .final-message-box {
+            background-color: #000;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 3px solid #00ff00;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 1003;
+        }
+
+        /* New styles for the "Shutting down" screen */
+        #shutdown-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1004;
+            color: white;
+        }
+
+        .shutdown-text {
+            font-size: 2rem;
+            opacity: 0;
+            animation: fade-in-out 3s ease-in-out;
+        }
+
+        @keyframes fade-in-out {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay to start the prank on user interaction -->
+    <div id="start-overlay">
+        <button id="startButton" class="start-button">
+            TEKAN UNTUK MELANJUTKAN
+        </button>
+    </div>
+
+    <!-- Red flickering overlay -->
+    <div class="flicker-overlay"></div>
+
+    <div class="container">
+        <!-- Main title of the fake alert -->
+        <h1 class="text-5xl font-bold mb-4">
+            ‼️ PERINGATAN KRITIS: KONTROL PERANGKAT HILANG ‼️
+        </h1>
+        <p class="text-2xl text-red-400 font-semibold mt-4">
+            Akses ke perangkat telah diambil alih! File-file anda Dihapus!
+        </p>
+
+        <!-- Big, pulsating warning box -->
+        <div class="alert-box">
+            <!-- SVG icon for a warning sign -->
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            <span>ANCAMAN SIBER DITEMUKAN: INTRUSI DATA TAK TERKENDALI</span>
+        </div>
+
+        <!-- Fake threat details -->
+        <div class="mt-8 text-left">
+            <p class="text-xl font-bold text-red-500">
+                Detail Ancaman:
+            </p>
+            <ul class="list-disc list-inside mt-2 text-gray-300">
+                <li class="mb-1">Tipe Ancaman: Penghapusan Data Tingkat Tinggi</li>
+                <li class="mb-1">Dampak: Potensi penghapusan data pribadi, akses ke akun terautentikasi, dan informasi kontak.</li>
+                <li class="mb-1">Status: Aktivitas mencurigakan terdeteksi pada internal-storage/data/user/...</li>
+                <li class="mb-1">Tindakan: Sistem akan dikunci untuk mencegah pencurian data dalam:</li>
+            </ul>
+        </div>
+        
+        <!-- Countdown Timer -->
+        <div id="countdown" class="countdown">10</div>
+    </div>
+
+    <!-- The new fake critical system window -->
+    <div id="critical-window-overlay" class="critical-window-overlay">
+        <div id="critical-window" class="critical-window">
+            <div id="window-title-bar" class="window-title-bar">
+                <span>Peringatan Sistem KRITIS</span>
+                <button id="window-close-button" class="window-close-button">&times;</button>
+            </div>
+            <div class="window-body">
+                <!-- Changed the message to "FORECLOSE!" -->
+                <h3 class="text-4xl font-bold text-red-500 mb-4 animate-pulse">FORECLOSE!</h3>
+                <p class="text-2xl text-gray-300">
+                    Proses ForeClose pada perangkat Anda dimulai. Semua data sedang dikunci.
+                </p>
+                <p class="text-xl text-yellow-400 mt-4">
+                    Tunggu hingga proses selesai. Jangan tutup jendela ini!
+                </p>
+                <button id="final-prank-button" class="mt-8 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full transition-colors transform hover:scale-110">
+                    Hentikan ForeClose
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New overlay for the freeze effect -->
+    <div id="freezeOverlay" class="freeze-overlay"></div>
+
+    <!-- New message box for the final prank reveal -->
+    <div id="finalMessageBox" class="final-message-box">
+        <h3 class="text-5xl font-bold text-green-500 mb-4">Mampus Ku Prank</h3>
+        <button id="reloadButton" class="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full transition-colors transform hover:scale-110">
+            Tutup
+        </button>
+    </div>
+
+    <!-- New element for the "Shutting down" simulation -->
+    <div id="shutdown-screen">
+        <p class="shutdown-text">Shutting down...</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startOverlay = document.getElementById('start-overlay');
+            const startButton = document.getElementById('startButton');
+            const criticalWindowOverlay = document.getElementById('critical-window-overlay');
+            const criticalWindow = document.getElementById('critical-window');
+            const windowTitleBar = document.getElementById('window-title-bar');
+            const windowCloseButton = document.getElementById('window-close-button');
+            const finalPrankButton = document.getElementById('final-prank-button');
+            const countdownElement = document.getElementById('countdown');
+            const freezeOverlay = document.getElementById('freezeOverlay');
+            const finalMessageBox = document.getElementById('finalMessageBox');
+            const reloadButton = document.getElementById('reloadButton');
+            const body = document.body;
+            const shutdownScreen = document.getElementById('shutdown-screen');
+            let countdown = 10;
+            let vibrateInterval;
+            let laughVibrateInterval;
+            let alarmSynth; // Variable to hold the Tone.js synth
+
+            // Masukkan status history palsu untuk mencegah tombol kembali
+            history.pushState(null, null, location.href);
+            window.addEventListener('popstate', function () {
+                history.pushState(null, null, location.href);
+            });
+            
+            // Fungsi untuk mengaktifkan mode fullscreen di perangkat seluler
+            const goFullscreen = () => {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                    document.documentElement.msRequestFullscreen();
+                }
+            };
+
+            // Fungsi untuk membuat ponsel bergetar dengan pola yang intens
+            const vibrate = () => {
+                if (navigator.vibrate) {
+                    vibrateInterval = setInterval(() => {
+                        navigator.vibrate([200, 100, 200, 100, 500, 100, 200]);
+                    }, 1000); // Ulangi getaran setiap 1 detik
+                }
+            };
+
+            // Fungsi untuk getaran tawa
+            const laughVibrate = () => {
+                if (navigator.vibrate) {
+                    // Pola getaran yang lebih cepat dan pendek untuk meniru tawa
+                    laughVibrateInterval = setInterval(() => {
+                        navigator.vibrate([50, 50, 50, 50, 50, 50, 150]);
+                    }, 500); // Ulangi getaran setiap 0.5 detik
+                }
+            };
+            
+            // Function to play a more complex and terrifying alarm sound
+            const playAlarm = async () => {
+                const synth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "sawtooth" }
+                }).toDestination();
+                
+                const filter = new Tone.Filter(200, "lowpass").toDestination();
+                synth.connect(filter);
+
+                Tone.getContext().resume(); // Ensure audio context is active
+                
+                // Play a dissonant, jarring chord repeatedly
+                const pattern = new Tone.Pattern((time, note) => {
+                    synth.triggerAttackRelease(note, "16n", time);
+                }, ["C2", "G#2", "D#3", "G3"]).start(0);
+
+                // Start the transport (audio engine)
+                Tone.Transport.bpm.value = 120;
+                Tone.Transport.start();
+
+                alarmSynth = synth; // Save the synth instance
+            };
+
+            // Function to play a creepy, distorted laughing sound
+            const playLaugh = async () => {
+                const synth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "square" }
+                }).toDestination();
+
+                const chorus = new Tone.Chorus(4, 2.5, 0.5).toDestination();
+                synth.connect(chorus);
+                
+                Tone.getContext().resume(); // Ensure audio context is active
+
+                // Play a short, quick burst of high-pitched notes to simulate a laugh
+                synth.triggerAttackRelease(["C5", "E5", "G5"], "8n");
+                
+                // Stop the sound after a short delay
+                setTimeout(() => {
+                    synth.dispose();
+                }, 1000);
+            };
+
+            // Main function to start the prank after user interaction
+            const startPrank = () => {
+                startOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    startOverlay.style.display = 'none';
+                    body.classList.add('glitch-effect');
+                }, 500);
+
+                goFullscreen();
+                playAlarm();
+                vibrate();
+                
+                // Countdown timer logic
+                const countdownInterval = setInterval(() => {
+                    countdown--;
+                    countdownElement.textContent = countdown;
+                    
+                    // Change text color as the timer gets lower
+                    if (countdown < 10) {
+                        countdownElement.style.color = '#ff0000';
+                        countdownElement.style.animation = 'text-pulse 0.5s infinite';
+                    }
+                    
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                        clearInterval(vibrateInterval);
+                        // Stop Tone.js and show the critical window after the timer ends
+                        Tone.Transport.stop();
+                        if (alarmSynth) {
+                            alarmSynth.dispose(); // Clean up the synth
+                        }
+                        setTimeout(() => {
+                            criticalWindowOverlay.classList.add('active');
+                        }, 500); 
+                    }
+                }, 1000); // Update every 1 second
+            };
+
+            // Event listener for the start button
+            startButton.addEventListener('click', startPrank);
+
+            // The close button on the fake window will just flash red and do nothing
+            windowCloseButton.addEventListener('click', () => {
+                windowTitleBar.classList.add('window-title-bar-flash');
+                setTimeout(() => {
+                    windowTitleBar.classList.remove('window-title-bar-flash');
+                }, 600);
+            });
+
+            // The "Hentikan ForeClose" button freezes the screen for 5 seconds and then reveals the final message
+            finalPrankButton.addEventListener('click', () => {
+                // Freeze the screen
+                freezeOverlay.style.display = 'block';
+                
+                // Wait for 5 seconds
+                setTimeout(() => {
+                    // Hide the freeze overlay and trigger the prank reveal
+                    freezeOverlay.style.display = 'none';
+                    finalMessageBox.style.display = 'block';
+
+                    // Start the new laugh sound and vibration
+                    playLaugh();
+                    laughVibrate();
+                }, 5000); // 5 seconds
+            });
+
+            // Reload the page when the "Tutup" button is clicked
+            reloadButton.addEventListener('click', () => {
+                // Clear all ongoing effects
+                clearInterval(vibrateInterval);
+                clearInterval(laughVibrateInterval);
+
+                // Hide all previous content
+                document.querySelector('.container').style.display = 'none';
+                criticalWindowOverlay.classList.remove('active');
+                finalMessageBox.style.display = 'none';
+                document.querySelector('.flicker-overlay').style.display = 'none';
+                body.classList.remove('glitch-effect');
+
+                // Show the shutdown screen
+                shutdownScreen.style.display = 'flex';
+
+                // After a short delay, redirect
+                setTimeout(() => {
+                    window.location.href = "https://www.google.com";
+                }, 3000); // Wait 3 seconds to redirect
+            });
+        });
+    </script>
+</body>
+</html>
